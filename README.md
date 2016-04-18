@@ -14,9 +14,9 @@ The root path / will correspond to the sqlite_master table.
 ### Path
 
 ```
-{/[<table name>[-<explicit primary keys>][/<filter>][/<columns>]}
+{/[<table name>[-<auto-incremented primary keys>][/<filter>][/<columns>]}
 
-<explicit primary keys> = {<column name>[,...]}
+<auto-incremented primary keys> = {<column name>[,...]}
 
 <filter> = {<column name>=<value>[<operator>...]}
 
@@ -68,7 +68,7 @@ Instead of:
 $ echo "SELECT tbl_name FROM sqlite_master WHERE type = 'table';" | sqlite3 blog.db
 ```
 
-to get list of table name separated by space:
+to get list of table names separated by space:
 
 ```
 $ sqls blog.db /
@@ -212,7 +212,7 @@ $ sqle blog.db /entries/id,title,post,word_count 3,"Everything","42",1
 Update a column value with a primary key in the where clause:
 
 ```
-$ sqle blog.db /entries/id=1 "Another Great Day"
+$ sqle blog.db /entries/id=1/title "Another Great Day"
 ```
 
 Update several columns where filter matches:
