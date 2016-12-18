@@ -14,13 +14,11 @@ The root path / will correspond to the sqlite_master table.
 ### Path
 
 ```
-{/[<table name>[-<auto-incremented primary keys>][/<filter>][/<columns>]}
-
-<auto-incremented primary keys> = {<column name>[,...]}
+{/[<table name>[/<filter>][/<columns>]}
 
 <filter> = {<column name>=<value>[<operator>...]}
 
-<operator> = [ & | | ]
+<operator> = [ & | ]
 
 <columns> = {<column name>[,...]}
 ```
@@ -173,9 +171,18 @@ sqlite 2016-04-14 13:04:00.1460640900
 or with custom column separator:
 
 ```
-$ sqls --colsep=" | " blog.db /tags/name="sqlite"
+$ sqls -d | blog.db /tags/name="sqlite"
+sqlite|2016-04-14 13:04:00.1460640900
+```
+
+or
+
+```
+$ sqls -d " | " blog.db /tags/name="sqlite"
 sqlite | 2016-04-14 13:04:00.1460640900
 ```
+
+$
 
 ## sqle
 Edit content in a SQLite database via a filesystem like path that addresses
@@ -195,10 +202,11 @@ To insert a new row, explicit primary key and all columns:
 $ sqle blog.db /entries 1,"2016-04-14 13:04:26.1460640926","Some Thoughts","Lorem ipsum",2
 ```
 
-To insert a new row, with auto-incremented primary key and select columns:
+To insert a new row, with auto-incremented primary key and select columns (the
+auto-incremented primary keys are just omitted):
 
 ```
-$ sqle blog.db /entries-id/title,post,word_count "Another Day","Same old, same old",4
+$ sqle blog.db /entries/title,post,word_count "Another Day","Same old, same old",4
 ```
 
 To insert a new row, with expicit primary key and select columns:
