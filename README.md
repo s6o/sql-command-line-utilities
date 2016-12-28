@@ -6,6 +6,8 @@ in file system utilities (e.g. ls) like manner.
   * sqle - for inserting and updating data in tables
   * sqld - for deleting data from tables
 
+Currently a small projec to learn Rust. Actual practical value yet to be determined :)
+
 ## Mapping tables and columns to a path
 
 ### Root
@@ -29,7 +31,7 @@ List schema and content of a SQLite database via a filesystem like path.
 Usage:
 
 ```
-$ sqls [OPTIONS] <db-file> <path>
+$ sqls [OPTIONS] <path> <db-file>
 ```
 
 Given the following schema in blog.db:
@@ -66,17 +68,10 @@ Instead of:
 $ echo "SELECT tbl_name FROM sqlite_master WHERE type = 'table';" | sqlite3 blog.db
 ```
 
-to get list of table names separated by space:
+to get list of table names:
 
 ```
-$ sqls blog.db /
-entries tags entry_tags
-```
-
-or to get a list of table names one per each line:
-
-```
-$ sqls -1 blog.db /
+$ sqls / blog.db
 entries
 tags
 entry_tags
@@ -85,7 +80,7 @@ entry_tags
 or to get a listing of the full schema in SQL:
 
 ```
-$ sqls -s blog.db /
+$ sqls -s / blog.db
 CREATE TABLE entries (
   id PRIMARY KEY
   , created_at_utc TEXT DEFAULT (strftime('%Y-%m-%d %H:%m:%S.%s', 'now', 'utc'))
@@ -109,7 +104,7 @@ CREATE TABLE entry_tags (
 or to list a schema of single entity:
 
 ```
-$sqls -s blog.db /entries
+$sqls -s /entries blog.db
 CREATE TABLE entries (
   id PRIMARY KEY
   , created_at_utc TEXT DEFAULT (strftime('%Y-%m-%d %H:%m:%S.%s', 'now', 'utc'))
@@ -130,7 +125,7 @@ $ echo "SELECT * FROM tags;" | sqlite3 blog.db
 to get all records with all columns for every record:
 
 ```
-$ sqls blog.db /tags
+$ sqls /tags blog.db
 algorithms 2016-04-14 13:04:05.1460640725
 argriculture 2016-04-14 13:04:05.1460640725
 bahamas 2016-04-14 13:04:30.1460640750
@@ -147,7 +142,7 @@ vim 2016-04-14 13:04:26.1460640926
 with table header:
 
 ```
-$ sqls -h blog.db /tags
+$ sqls -h /tags blog.db
 name created_at_utc
 algorithms 2016-04-14 13:04:05.1460640725
 argriculture 2016-04-14 13:04:05.1460640725
@@ -165,20 +160,20 @@ vim 2016-04-14 13:04:26.1460640926
 Applying a where clause:
 
 ```
-$ sqls blog.db /tags/name="sqlite"
+$ sqls /tags/name="sqlite" blog.db
 sqlite 2016-04-14 13:04:00.1460640900
 ```
 or with custom column separator:
 
 ```
-$ sqls -d | blog.db /tags/name="sqlite"
+$ sqls -d | /tags/name="sqlite" blog.db
 sqlite|2016-04-14 13:04:00.1460640900
 ```
 
 or
 
 ```
-$ sqls -d " | " blog.db /tags/name="sqlite"
+$ sqls -d " | " /tags/name="sqlite" blog.db
 sqlite | 2016-04-14 13:04:00.1460640900
 ```
 
@@ -191,7 +186,7 @@ a row or a single cell.
 Usage:
 
 ```
-$ sqle <db-file> <path> <new-content>
+$ sqle <path> <new-content> <db-file>
 ```
 
 ### Inserting data
@@ -199,20 +194,20 @@ $ sqle <db-file> <path> <new-content>
 To insert a new row, explicit primary key and all columns:
 
 ```
-$ sqle blog.db /entries 1,"2016-04-14 13:04:26.1460640926","Some Thoughts","Lorem ipsum",2
+$ sqle /entries 1,"2016-04-14 13:04:26.1460640926","Some Thoughts","Lorem ipsum",2 blog.db
 ```
 
 To insert a new row, with auto-incremented primary key and select columns (the
 auto-incremented primary keys are just omitted):
 
 ```
-$ sqle blog.db /entries/title,post,word_count "Another Day","Same old, same old",4
+$ sqle /entries/title,post,word_count "Another Day","Same old, same old",4 blog.db
 ```
 
 To insert a new row, with expicit primary key and select columns:
 
 ```
-$ sqle blog.db /entries/id,title,post,word_count 3,"Everything","42",1
+$ sqle /entries/id,title,post,word_count 3,"Everything","42",1 blog.db
 ```
 
 ### Updating records
@@ -220,13 +215,13 @@ $ sqle blog.db /entries/id,title,post,word_count 3,"Everything","42",1
 Update a column value with a primary key in the where clause:
 
 ```
-$ sqle blog.db /entries/id=1/title "Another Great Day"
+$ sqle /entries/id=1/title "Another Great Day" blog.db
 ```
 
 Update several columns where filter matches:
 
 ```
-$ sqle blog.db /entries/id=1&title="Another Great Day"/title,post "An Actual Day","Stuff that actually happened"
+$ sqle /entries/id=1&title="Another Great Day"/title,post "An Actual Day","Stuff that actually happened" blog.db
 ```
 
 ## sqld
@@ -235,7 +230,7 @@ Remove content from table or database.
 Usage:
 
 ```
-$ sqld <db-file> <path>
+$ sqld <path> <db-file>
 ```
 
 Instead of:
@@ -247,5 +242,5 @@ $ echo "DELETE FROM tags WHERE name = 'sqlite';" | sqlite3 blog.db
 do
 
 ```
-$ sqld blog.db /tags/name="sqlite"
+$ sqld /tags/name="sqlite" blog.db
 ```
