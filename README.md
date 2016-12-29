@@ -6,7 +6,7 @@ in file system utilities (e.g. ls) like manner.
   * sqle - for inserting and updating data in tables
   * sqld - for deleting data from tables
 
-Currently a small projec to learn Rust. Actual practical value yet to be determined :)
+Currently a small project to learn Rust. Actual practical value yet to be determined ...
 
 ## Mapping tables and columns to a path
 
