@@ -1,0 +1,24 @@
+[package]
+name = "sql-command-line-utilities"
+version = "0.0.1"
+authors = [ "s6o" ]
+
+[dependencies]
+clap = "2.19.2"
+rusqlite = "0.7.3"
+
+[lib]
+name = "sqlcmdlutils"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sqls"
+path = "src/sqls/main.rs"
+
+[[bin]]
+name = "sqle"
+path = "src/sqle/main.rs"
+
+[[bin]]
+name = "sqld"
+path = "src/sqld/main.rs"
