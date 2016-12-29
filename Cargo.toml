@@ -2,6 +2,7 @@
 name = "sql-command-line-utilities"
 version = "0.0.1"
 authors = [ "s6o" ]
+publish = false
 
 [dependencies]
 clap = "2.19.2"
