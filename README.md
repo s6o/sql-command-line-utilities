@@ -38,7 +38,7 @@ Given the following schema in blog.db:
 
 ```
 CREATE TABLE entries (
-  id PRIMARY KEY
+  id INTEGER PRIMARY KEY AUTOINCREMENT
   , created_at_utc TEXT DEFAULT (strftime('%Y-%m-%d %H:%m:%S.%s', 'now', 'utc'))
   , title TEXT NOT NULL
   , post TEXT
