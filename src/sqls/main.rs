@@ -3,7 +3,7 @@ use clap::{Arg, App};
 
 extern crate rusqlite;
 use rusqlite::{Connection, Rows, Row};
-use rusqlite::types::{ToSql};
+use rusqlite::types::{ToSql, Value};
 
 extern crate sqlcmdlutils;
 use sqlcmdlutils::dbpath::{DbPath, db_path_help, parse_db_path};
@@ -107,22 +107,17 @@ fn output_rows(mut rows: Rows) -> () {
     }
 }
 
-// this seems way too crazy ... just to print stuff to console regardless of type
 fn convert_value(row: &Row, col_idx: i32) -> String {
-    match row.get_checked::<i32, String>(col_idx) {
-        Ok(s) => s,
-        Err(_) => match row.get_checked::<i32, i64>(col_idx) {
-            Ok(i) => i.to_string(),
-            Err(_) => match row.get_checked::<i32, f64>(col_idx) {
-                Ok(f) => f.to_string(),
-                Err(_) => match row.get_checked::<i32, Vec<u8>>(col_idx) {
-                    Ok(b) => match String::from_utf8(b) {
-                        Ok(s) => s,
-                        Err(_) => "".to_string()
-                    },
-                    Err(_) => "".to_string()
-                }
+    match row.get_checked::<i32, Value>(col_idx) {
+        Ok(v) => {
+            match v {
+                Value::Null => "<null>".to_string(),
+                Value::Integer(i) => i.to_string(),
+                Value::Real(f) => f.to_string(),
+                Value::Text(t) => t.to_string(),
+                Value::Blob(_) => "<blob>".to_string()
             }
         }
+        Err(_) => "<type_fail>".to_string()
     }
 }
