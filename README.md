@@ -126,54 +126,48 @@ to get all records with all columns for every record:
 
 ```
 $ sqls /tags blog.db
-algorithms 2016-04-14 13:04:05.1460640725
-argriculture 2016-04-14 13:04:05.1460640725
-bahamas 2016-04-14 13:04:30.1460640750
-crud 2016-04-14 13:04:37.1460640877
-command-line 2016-04-14 13:04:37.1460640877
-database 2016-04-14 13:04:37.1460640877
-sqlite 2016-04-14 13:04:00.1460640900
-sqlite3 2016-04-14 13:04:00.1460640900
-json 2016-04-14 13:04:26.1460640926
-messagepack 2016-04-14 13:04:26.1460640926
-vim 2016-04-14 13:04:26.1460640926
+algorithms|2016-04-14 13:04:05.1460640725
+argriculture|2016-04-14 13:04:05.1460640725
+bahamas|2016-04-14 13:04:30.1460640750
+crud|2016-04-14 13:04:37.1460640877
+command-line|2016-04-14 13:04:37.1460640877
+database|2016-04-14 13:04:37.1460640877
+sqlite|2016-04-14 13:04:00.1460640900
+sqlite3|2016-04-14 13:04:00.1460640900
+json|2016-04-14 13:04:26.1460640926
+messagepack|2016-04-14 13:04:26.1460640926
+vim|2016-04-14 13:04:26.1460640926
 ```
 
 with table header:
 
 ```
 $ sqls -h /tags blog.db
-name created_at_utc
-algorithms 2016-04-14 13:04:05.1460640725
-argriculture 2016-04-14 13:04:05.1460640725
-bahamas 2016-04-14 13:04:30.1460640750
-crud 2016-04-14 13:04:37.1460640877
-command-line 2016-04-14 13:04:37.1460640877
-database 2016-04-14 13:04:37.1460640877
-sqlite 2016-04-14 13:04:00.1460640900
-sqlite3 2016-04-14 13:04:00.1460640900
-json 2016-04-14 13:04:26.1460640926
-messagepack 2016-04-14 13:04:26.1460640926
-vim 2016-04-14 13:04:26.1460640926
+name|created_at_utc
+algorithms|2016-04-14 13:04:05.1460640725
+argriculture|2016-04-14 13:04:05.1460640725
+bahamas|2016-04-14 13:04:30.1460640750
+crud|2016-04-14 13:04:37.1460640877
+command-line|2016-04-14 13:04:37.1460640877
+database|2016-04-14 13:04:37.1460640877
+sqlite|2016-04-14 13:04:00.1460640900
+sqlite3|2016-04-14 13:04:00.1460640900
+json|2016-04-14 13:04:26.1460640926
+messagepack|2016-04-14 13:04:26.1460640926
+vim|2016-04-14 13:04:26.1460640926
 ```
 
 Applying a where clause:
 
 ```
-$ sqls /tags/name="sqlite" blog.db
-sqlite 2016-04-14 13:04:00.1460640900
-```
-or with custom column separator:
-
-```
-$ sqls -d | /tags/name="sqlite" blog.db
+$ sqls "/tags/name='sqlite'" blog.db
 sqlite|2016-04-14 13:04:00.1460640900
 ```
 
 or
 
 ```
-$ sqls -d " | " /tags/name="sqlite" blog.db
+$ sqls -d " | " "/tags/name='sqlite'" blog.db
 sqlite | 2016-04-14 13:04:00.1460640900
 ```
 
@@ -242,5 +236,5 @@ $ echo "DELETE FROM tags WHERE name = 'sqlite';" | sqlite3 blog.db
 do
 
 ```
-$ sqld /tags/name="sqlite" blog.db
+$ sqld "/tags/name='sqlite'" blog.db
 ```
