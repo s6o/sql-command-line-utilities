@@ -21,17 +21,17 @@ pub fn parse_db_path(path: &str) -> DbPath {
         if parts.is_empty() {
             DbPath::Root
         } else if parts.len() == 1 {
-            DbPath::Table(parts[0].to_string())
+            DbPath::Table(escape(parts[0]))
         } else if parts.len() == 2 {
             if is_filter(parts[1]) {
                 DbPath::TableFilter {
-                    table: parts[0].to_string(),
-                    filter: parts[1].to_string()
+                    table: escape(parts[0]),
+                    filter: parse_filter(parts[1])
                 }
             } else if is_select(parts[1]) {
                 DbPath::TableSelect {
-                    table: parts[0].to_string(),
-                    select: parts[1].to_string()
+                    table: escape(parts[0]),
+                    select: escape(parts[1])
                 }
             } else {
                 DbPath::Error("Incorrect /<filter> or /<columns> specification.".to_string())
@@ -39,9 +39,9 @@ pub fn parse_db_path(path: &str) -> DbPath {
         } else if parts.len() == 3 {
             if is_filter(parts[1]) && is_select(parts[2]) {
                 DbPath::TableFilterSelect {
-                    table: parts[0].to_string(),
-                    filter: parts[1].to_string(),
-                    select: parts[2].to_string()
+                    table: escape(parts[0]),
+                    filter: parse_filter(parts[1]),
+                    select: escape(parts[2])
                 }
             } else {
                 DbPath::Error("Incorrect /<filter> or /<columns> specification.".to_string())
@@ -60,4 +60,12 @@ fn is_filter(s: &str) -> bool {
 
 fn is_select(s: &str) -> bool {
     s.contains(",")
+}
+
+fn escape(s: &str) -> String {
+    s.replace("'", "''").replace("\"", "\\\"").replace(";", "")
+}
+
+fn parse_filter(filter: &str) -> String {
+    filter.replace(";", "").replace("&", " AND ").replace("|", " OR ")
 }
