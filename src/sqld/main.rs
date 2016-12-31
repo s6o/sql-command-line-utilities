@@ -32,8 +32,8 @@ fn main() {
         DbPath::Error(msg) => println!("{}", msg),
         DbPath::Root => println!("To be implemented for root"),
         DbPath::Table(table) => println!("To be implemented for table {}", table),
+        DbPath::TableColumns {table, columns} => println!("To be implemented for {} and {}", table, columns),
         DbPath::TableFilter {table, filter} => println!("To be implemented for {} and {}", table, filter),
-        DbPath::TableSelect {table, select} => println!("To be implemented for {} and {}", table, select),
-        DbPath::TableFilterSelect {table, filter, select} => println!("To be implemented for {}, {} and {}", table, filter, select),
+        DbPath::TableColumnsFilter {table, columns, filter} => println!("To be implemented for {}, {} and {}", table, columns, filter),
     }
 }

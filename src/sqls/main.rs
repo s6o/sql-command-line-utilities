@@ -57,18 +57,18 @@ fn main() {
             };
         }
 
+        DbPath::TableColumns {table, columns} => {
+            let query = format!("SELECT {} FROM {}", columns, table);
+            compose_results(conn, query.as_str(), &[], &output_rows);
+        }
+
         DbPath::TableFilter {table, filter} => {
             let query = format!("SELECT * FROM {} WHERE {}", table, filter);
             compose_results(conn, query.as_str(), &[], &output_rows);
         }
 
-        DbPath::TableSelect {table, select} => {
-            let query = format!("SELECT {} FROM {}", select, table);
-            compose_results(conn, query.as_str(), &[], &output_rows);
-        }
-
-        DbPath::TableFilterSelect {table, filter, select} => {
-            let query = format!("SELECT {} FROM {} WHERE {}", select, table, filter);
+        DbPath::TableColumnsFilter {table, columns, filter} => {
+            let query = format!("SELECT {} FROM {} WHERE {}", columns, table, filter);
             compose_results(conn, query.as_str(), &[], &output_rows);
         }
     }
