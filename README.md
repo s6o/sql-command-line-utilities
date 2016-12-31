@@ -16,13 +16,17 @@ The root path / will correspond to the sqlite_master table.
 ### Path
 
 ```
-{/[<table name>[/<filter>][/<columns>]}
+path := ['"']'/'[table['/'columns]['/'filter]]['"']
 
-<filter> = {<column name>=<value>[<operator>...]}
+table := <text>
 
-<operator> = [ & | ]
+columns := [column][['=']value][','columns]
+column := <text>
+value := ['\'']<text>['\'']
 
-<columns> = {<column name>[,...]}
+filter := column comparator value [operator filter]
+comparator := '==' | '!=' | '<=' | '>=' | '<' | '>'
+operator := '&' | '|'
 ```
 
 ## sqls
@@ -160,14 +164,14 @@ vim|2016-04-14 13:04:26.1460640926
 Applying a where clause:
 
 ```
-$ sqls "/tags/name='sqlite'" blog.db
+$ sqls "/tags/name=='sqlite'" blog.db
 sqlite|2016-04-14 13:04:00.1460640900
 ```
 
 or
 
 ```
-$ sqls -d " | " "/tags/name='sqlite'" blog.db
+$ sqls -d " | " "/tags/name=='sqlite'" blog.db
 sqlite | 2016-04-14 13:04:00.1460640900
 ```
 
@@ -180,7 +184,7 @@ a row or a single cell.
 Usage:
 
 ```
-$ sqle <path> <new-content> <db-file>
+$ sqle <path> <db-file>
 ```
 
 ### Inserting data
@@ -188,20 +192,20 @@ $ sqle <path> <new-content> <db-file>
 To insert a new row, explicit primary key and all columns:
 
 ```
-$ sqle /entries 1,"2016-04-14 13:04:26.1460640926","Some Thoughts","Lorem ipsum",2 blog.db
+$ sqle "/entries/1,'2016-04-14 13:04:26.1460640926','Some Thoughts','Lorem ipsum',2" blog.db
 ```
 
 To insert a new row, with auto-incremented primary key and select columns (the
 auto-incremented primary keys are just omitted):
 
 ```
-$ sqle /entries/title,post,word_count "Another Day","Same old, same old",4 blog.db
+$ sqle "/entries/title='Another Day',post='Same old, same old',word_count=3" blog.db
 ```
 
 To insert a new row, with expicit primary key and select columns:
 
 ```
-$ sqle /entries/id,title,post,word_count 3,"Everything","42",1 blog.db
+$ sqle "/entries/id=3,title='Everything',post='42',word_count=1" blog.db
 ```
 
 ### Updating records
@@ -209,13 +213,13 @@ $ sqle /entries/id,title,post,word_count 3,"Everything","42",1 blog.db
 Update a column value with a primary key in the where clause:
 
 ```
-$ sqle /entries/id=1/title "Another Great Day" blog.db
+$ sqle "/entries/title='Another Great Day'/id==1" blog.db
 ```
 
 Update several columns where filter matches:
 
 ```
-$ sqle /entries/id=1&title="Another Great Day"/title,post "An Actual Day","Stuff that actually happened" blog.db
+$ sqle "/entries/title='An Actual Day',post='Stuff that actually happened'/id==1&title=='Another Great Day'" blog.db
 ```
 
 ## sqld
@@ -236,5 +240,5 @@ $ echo "DELETE FROM tags WHERE name = 'sqlite';" | sqlite3 blog.db
 do
 
 ```
-$ sqld "/tags/name='sqlite'" blog.db
+$ sqld "/tags/name=='sqlite'" blog.db
 ```
