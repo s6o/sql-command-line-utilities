@@ -49,7 +49,21 @@ fn main() {
             }
 
             if tables.len() > 0 {
-                // TODO Confirmation propmt
+                println!("Are you sure you'd like to delete data from all tables? S(ure)/H(ell no)");
+                let mut user_input = String::new();
+                match std::io::stdin() .read_line(&mut user_input) {
+                    Ok(_) => {
+                        let response = user_input.trim().to_lowercase();
+                        if response != "s" && response != "sure" {
+                            return ()
+                        }
+                    }
+                    Err(msg) => {
+                        println!("Error: {}", msg);
+                        return ()
+                    }
+                }
+
                 let mut tx_commit = true;
                 for t in tables {
                     let delete_query = format!("DELETE FROM {}", t);
